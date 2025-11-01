@@ -1,8 +1,8 @@
-# 🤖 AI-Powered Log Analytics Pipeline
+# AI-Powered Log Analytics Pipeline
 
 A complete, end-to-end log ingestion and analytics platform built with a real-time, microservices-based architecture. This system collects logs, processes them with an AI model for sentiment analysis, and displays them on a live, interactive dashboard.
 
-### ✨ Key Features
+### Key Features
 
 * **Asynchronous Ingestion:** A high-throughput FastAPI collector API accepts logs and pushes them to a RabbitMQ queue.
 * **AI Processing:** A Python worker consumes logs, analyzes their sentiment using a Hugging Face model, and enriches them.
@@ -12,18 +12,18 @@ A complete, end-to-end log ingestion and analytics platform built with a real-ti
 
 ---
 
-### 🏛️ System Architecture
+### System Architecture
 
 This project uses a decoupled, event-driven architecture to ensure scalability and resilience.
 
-D**Data Ingestion (Write Path):** [Dummy App / curl] -> [Collector API (FastAPI)] -> [RabbitMQ Queue] -> [AI Worker (Python)] -> [Elasticsearch]
+**Data Ingestion (Write Path):** [Dummy App / curl] -> [Collector API (FastAPI)] -> [RabbitMQ Queue] -> [AI Worker (Python)] -> [Elasticsearch]
 
 **Data Visualization (Read Path):** [React Dashboard] -> [Query API (FastAPI)] -> [Elasticsearch]
 
 
 ---
 
-### 🚀 Tech Stack
+### Tech Stack
 
 | Area | Technology | Purpose |
 | :--- | :--- | :--- |
@@ -37,8 +37,8 @@ D**Data Ingestion (Write Path):** [Dummy App / curl] -> [Collector API (FastAPI)
 
 ---
 
-🏁 How to Run
-You only need [Node.js](httpsE://nodejs.org/) and [Docker Desktop](httpsE://www.docker.com/products/docker-desktop/) installed.
+How to Run
+You only need [Node.js](https://nodejs.org/) and [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed.
 
 #### 1. Run the Backend (Terminal 1)
 
@@ -46,32 +46,34 @@ The entire backend (all 4 services) runs with one command.
 
 ```bash
 # 1. Clone this repository
-git clone https://github.com/varunsalian/ai-log-analytics-pipeline.git
+git clone https://github.com/VS251/ai-log-analytics-pipeline.git
 cd ai-log-analytics-pipeline/log-analytics
 
 # 2. Build and run the containers
 docker-compose up -d --build
-
+```
 Note: Wait about 30-45 seconds for the services to boot up.
 
-2. Run the Frontend Dashboard (Terminal 2)
+#### 2. Run the Frontend Dashboard (Terminal 2)
 
-Bash
+```bash
 # 1. In a new terminal, navigate to the dashboard
 cd ai-log-analytics-pipeline/log-dashboard
 
 # 2. Install dependencies and start
 npm install
 npm start
+```
 Your dashboard is now live at http://localhost:3000.
 
-3. (Optional) Run the Data Simulator (Terminal 3)
+#### 3. (Optional) Run the Data Simulator (Terminal 3)
 
-Bash
+```bash
 # 1. In another new terminal, navigate to the dummy app
 cd ai-log-analytics-pipeline/dummy-app
 
 # 2. Install dependencies and run
 pip3 install requests
 python3 app.py
+```
 Watch your dashboard come alive with data!
