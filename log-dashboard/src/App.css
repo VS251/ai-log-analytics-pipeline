@@ -1,0 +1,19 @@
+/* --- New Search Bar Styles --- */
+.search-bar-container {
+  padding: 10px 20px 20px 20px;
+}
+
+.search-bar {
+  width: 100%;
+  max-width: 600px;
+  padding: 12px 15px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background-color: #3a3f4a;
+  color: white;
+}
+
+.search-bar::placeholder {
+  color: #aaa;
+}
