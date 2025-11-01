@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+pip-wheel-metadata/
+
+# Node
+node_modules/
+build/
+.npm/
+.DS_Store
+*.log
+
+# IDE
+.vscode/
+.idea/

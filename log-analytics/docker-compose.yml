@@ -1,0 +1,69 @@
+services:
+  query-api:
+    build: ./query-api
+    container_name: query-api
+    ports:
+      - "8001:8001"   
+    environment:
+      - ELASTICSEARCH_HOST=elasticsearch
+    networks:
+      - log-network
+    depends_on:
+      - elasticsearch
+
+  ai-worker:
+    build: ./ai-worker
+    container_name: ai-worker
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+      - ELASTICSEARCH_HOST=elasticsearch
+    networks:
+      - log-network
+    depends_on:
+      - rabbitmq
+      - elasticsearch
+
+  collector-api:
+    build: ./collector-api
+    container_name: collector-api
+    ports:
+      - "8000:8000"
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+    networks:
+      - log-network
+    depends_on:
+      - rabbitmq
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq/
+    networks:
+      - log-network
+
+  elasticsearch:
+    image: elasticsearch:8.11.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - log-network
+
+volumes:
+  rabbitmq_data:
+  elasticsearch_data:
+
+networks:
+  log-network:
+    driver: bridge
