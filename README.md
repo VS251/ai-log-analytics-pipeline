@@ -37,41 +37,41 @@ D**Data Ingestion (Write Path):** [Dummy App / curl] -> [Collector API (FastAPI)
 
 ---
 
-### 🏁 How to Run
+🏁 How to Run
+You only need [Node.js](httpsE://nodejs.org/) and [Docker Desktop](httpsE://www.docker.com/products/docker-desktop/) installed.
 
-You only need **Node.js** and **Docker Desktop** installed.
+#### 1. Run the Backend (Terminal 1)
+
+The entire backend (all 4 services) runs with one command.
 
 ```bash
-
-#### 1. Run the Backend
-
-The entire backend (all 4 services) runs with one command:
-
 # 1. Clone this repository
-git clone [https://github.com/YOUR_USERNAME/ai-log-analytics-pipeline.git](https://github.com/YOUR_USERNAME/ai-log-analytics-pipeline.git)
+git clone https://github.com/varunsalian/ai-log-analytics-pipeline.git
 cd ai-log-analytics-pipeline/log-analytics
 
 # 2. Build and run the containers
 docker-compose up -d --build
 
-#### 2. Run the Frontend Dashboard
+Note: Wait about 30-45 seconds for the services to boot up.
 
+2. Run the Frontend Dashboard (Terminal 2)
+
+Bash
 # 1. In a new terminal, navigate to the dashboard
-cd ../log-dashboard
+cd ai-log-analytics-pipeline/log-dashboard
 
 # 2. Install dependencies and start
 npm install
 npm start
-
 Your dashboard is now live at http://localhost:3000.
 
-#### 3. (Optional) Run the Data Simulator
+3. (Optional) Run the Data Simulator (Terminal 3)
 
+Bash
 # 1. In another new terminal, navigate to the dummy app
-cd ../dummy-app
+cd ai-log-analytics-pipeline/dummy-app
 
 # 2. Install dependencies and run
 pip3 install requests
 python3 app.py
-
 Watch your dashboard come alive with data!
