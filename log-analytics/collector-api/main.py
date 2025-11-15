@@ -2,6 +2,7 @@ import pika
 import json
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+from fastapi import FastAPI, HTTPException, Response, status # Updated imports
 import uvicorn
 import os
 
@@ -17,6 +18,23 @@ RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'rabbitmq')
 def read_root():
     """ A simple endpoint to check if the API is alive. """
     return {"status": "Collector API is running!"}
+
+@app.get("/health")
+def health_check(response: Response):
+    """
+    Checks if the service is healthy and can connect to RabbitMQ.
+    """
+    try:
+        connection = pika.BlockingConnection(pika.ConnectionParameters(host=RABBITMQ_HOST))
+        if connection.is_open:
+            connection.close()
+            return {"status": "ok", "rabbitmq": "connected"}
+    except Exception as e:
+        response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+        return {"status": "error", "rabbitmq": "disconnected", "detail": str(e)}
+
+    response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+    return {"status": "error", "rabbitmq": "unknown"}
 
 
 @app.post("/api/log")
