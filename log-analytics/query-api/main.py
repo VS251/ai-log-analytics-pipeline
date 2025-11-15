@@ -2,6 +2,7 @@ import os
 import time
 from fastapi import FastAPI, HTTPException, Query 
 from typing import Optional
+from fastapi import FastAPI, HTTPException, Query, Response, status
 from elasticsearch import Elasticsearch, NotFoundError
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -42,6 +43,17 @@ while es is None:
 @app.get("/")
 def read_root():
     return {"status": "Query API is running!"}
+
+@app.get("/health")
+def health_check(response: Response):
+    """
+    Checks if the service is healthy and can connect to Elasticsearch.
+    """
+    if es and es.ping():
+        return {"status": "ok", "elasticsearch": "connected"}
+    else:
+        response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
+        return {"status": "error", "elasticsearch": "disconnected"}
 
 @app.get("/api/logs")
 def get_logs(search: Optional[str] = Query(None)): 
