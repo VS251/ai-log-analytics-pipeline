@@ -1,10 +1,11 @@
 import pika
 import json
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from fastapi import FastAPI, HTTPException, Response, status # Updated imports
-import uvicorn
 import os
+import time
+from fastapi import FastAPI, HTTPException, Response, status, Security 
+from fastapi.security import APIKeyHeader 
+from pydantic import BaseModel
+import uvicorn
 
 class LogEntry(BaseModel):
     service: str
@@ -36,9 +37,23 @@ def health_check(response: Response):
     response.status_code = status.HTTP_503_SERVICE_UNAVAILABLE
     return {"status": "error", "rabbitmq": "unknown"}
 
+API_KEY_NAME = "X-API-Key"
+api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
+
+VALID_API_KEYS = ["my-secret-key-123"]
+
+async def get_api_key(api_key_header: str = Security(api_key_header)):
+    """Dependency to check for a valid API Key."""
+    if api_key_header in VALID_API_KEYS:
+        return api_key_header
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Could not validate credentials"
+        )
 
 @app.post("/api/log")
-def receive_log(log: LogEntry):
+def receive_log(log: LogEntry, api_key: str = Security(get_api_key)):
     """
     This function now connects, publishes, and disconnects
     for every single request. This is far more resilient.
