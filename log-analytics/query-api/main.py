@@ -1,8 +1,7 @@
 import os
-import time
-from fastapi import FastAPI, HTTPException, Query 
+import time 
+from fastapi import FastAPI, HTTPException, Query, Response, status, Request 
 from typing import Optional
-from fastapi import FastAPI, HTTPException, Query, Response, status
 from elasticsearch import Elasticsearch, NotFoundError
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -21,6 +20,19 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    start_time = time.time()
+
+    response = await call_next(request)
+
+    process_time = time.time() - start_time
+    response.headers["X-Process-Time"] = str(process_time)
+
+    print(f"[{request.method}] {request.url.path} - {response.status_code} - {process_time:.4f}s")
+
+    return response
 
 ELASTICSEARCH_HOST = os.getenv('ELASTICSEARCH_HOST', 'localhost')
 es = None
