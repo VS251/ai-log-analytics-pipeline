@@ -1,9 +1,9 @@
 import pika
 import json
 import os
-import time
-from fastapi import FastAPI, HTTPException, Response, status, Security 
-from fastapi.security import APIKeyHeader 
+import time 
+from fastapi import FastAPI, HTTPException, Response, status, Security, Request 
+from fastapi.security import APIKeyHeader
 from pydantic import BaseModel
 import uvicorn
 
@@ -14,6 +14,19 @@ class LogEntry(BaseModel):
 
 app = FastAPI()
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'rabbitmq')
+
+@app.middleware("http")
+async def add_process_time_header(request: Request, call_next):
+    start_time = time.time()
+
+    response = await call_next(request)
+
+    process_time = time.time() - start_time
+    response.headers["X-Process-Time"] = str(process_time)
+
+    print(f"[{request.method}] {request.url.path} - {response.status_code} - {process_time:.4f}s")
+
+    return response
 
 @app.get("/")
 def read_root():
