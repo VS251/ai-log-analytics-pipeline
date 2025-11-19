@@ -1,5 +1,4 @@
 import pika
-import json
 import os
 import time 
 from fastapi import FastAPI, HTTPException, Response, status, Security, Request 
@@ -11,6 +10,7 @@ class LogEntry(BaseModel):
     service: str
     level: str
     message: str
+
 
 app = FastAPI()
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'rabbitmq')
