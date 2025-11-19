@@ -12,14 +12,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+      
       - name: Build and Lint Collector API
         run: |
           echo "Starting Collector API build and test..."
-          # Use docker build command directly, pointing to the Dockerfile path
-          docker build -t collector-image:latest -f ./log-analytics/collector-api/Dockerfile ./log-analytics/collector-api
-
-          # Simulated Unit Test Run (Shows a recruiter you plan for testing)
+          docker build -t collector-image:latest -f Dockerfile .
+          
           echo "Running Python Linting/Tests (Simulated)..."
           docker run --rm collector-image:latest sh -c "pip install flake8 && flake8 main.py"
         working-directory: ./log-analytics/collector-api
@@ -27,10 +25,8 @@ jobs:
       - name: Build and Lint Query API
         run: |
           echo "Starting Query API build and test..."
-          # Use docker build command directly
-          docker build -t query-image:latest -f ./log-analytics/query-api/Dockerfile ./log-analytics/query-api
+          docker build -t query-image:latest -f Dockerfile .
           
-          # Simulated Unit Test Run
           echo "Running Python Linting/Tests (Simulated)..."
           docker run --rm query-image:latest sh -c "pip install flake8 && flake8 main.py"
         working-directory: ./log-analytics/query-api
